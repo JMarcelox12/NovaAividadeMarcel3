@@ -21,11 +21,12 @@ const ManterAlimento = () => {
         .doc(auth.currentUser?.uid)
         .collection("Alimento")
 
-    const modalEditar = () => {
+    const modalEditar = (item) => {
+        setFormAlimento(item);
         setModalEditar(!ModalEditar);
     }
 
-    const Salvar = async() => {
+    const Salvar = async(item) => {
         const alimento = new Alimento(formAlimento);
 
         if(alimento.id === undefined) {
@@ -149,6 +150,7 @@ const ManterAlimento = () => {
                 />
     }
 
+
     // EXCLUI E EDITAR
     const excluir = async(item) => {
         Alert.alert(
@@ -161,7 +163,7 @@ const ManterAlimento = () => {
                 {
                     text: "Excluir",
                     onPress: async () => {
-                        const resultado = await refALimento
+                        await refALimento
                             .doc(item.id)
                             .delete()
                             .then( () => {
@@ -175,19 +177,21 @@ const ManterAlimento = () => {
         )
     }
 
-    const editar = async(item) => {
-        const resutado = firestore.collection('Estabelecimento')
+    const editar = async (item) => {
+        firestore
+            .collection("Estabelecimento")
             .doc(auth.currentUser?.uid)
-            .collection('Alimento')
+            .collection("Alimento")
             .doc(item.id)
-            .onSnapshot( documentSnapshot => {
-                const alimento = new Alimento(documentSnapshot.data())
+            .onSnapshot((documentSnapshot) => {
+                const alimento = new Alimento(documentSnapshot.data());
                 setFormAlimento(alimento);
-                
-                setImagePath(alimento.imagem);
-             })
+                alert("Alimento Atualizado!");
+                setAtualizar(true);
+            });
+    };
 
-    }
+
 
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
@@ -202,16 +206,17 @@ const ManterAlimento = () => {
                 <TouchableOpacity style={[styles.buttonEdit, styles.buttonOutline]} onPress={modalEditar}>
                     <Text style={[styles.buttonText, styles.buttonOutlineText]}>EDITAR </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonEdit]} onPress={excluir}>
+                <TouchableOpacity style={[styles.buttonEdit]} onPress={() => excluir(item)}>
                     <Text style={[styles.buttonText]}>EXCLUIR </Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
 
-
+    const item = new Alimento(formAlimento);
 
     return (
+        
         <View style={styles.container}>
             <FlatList 
                 data={alimento}
@@ -266,7 +271,7 @@ const ManterAlimento = () => {
             <View style={styles.buttonContainer}>
                 <TouchableOpacity 
                     style={[styles.button]}
-                    onPress={Salvar}
+                    onPress={() => editar(item)}
                 >
                     <Text style={[styles.buttonText]}>Salvar</Text>
                 </TouchableOpacity>
