@@ -80,6 +80,7 @@ const Login = () => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
+            <Text style={[styles.titulo, {fontSize: 30, margin: 10}]}>Trabalho realizado por Ântoni Maciel e João Marcelo Severo.</Text>
             <Image source={require('../assets/JaPedeLogo.png')} style={{height: 130, width: "70%", margin: 20,}}/>
             <View style={styles.buttonContainer}>
                 <TextInput 
