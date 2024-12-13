@@ -6,10 +6,16 @@ import styles from '../styles';
 import { Estabelecimento } from '../model/Estabelecimento';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const ListarEstabelecimento = () => {
+const ListarEstabelecimentos = () => {
     const [loading, setLoading] = useState(true);
     const [atualizar, setAtualizar] = useState(true);
     const [estabelecimento, setEstabelecimento] = useState<Estabelecimento[]>([]); // Array em branco
+
+    const navigation = useNavigation();
+
+    const irParaListarAlimento = () => {
+        navigation.navigate("ListarAlimentos")
+    }
 
     const refEstabelecimento = firestore.collection("Estabelecimento")
     //FLATLIST
@@ -47,10 +53,12 @@ const ListarEstabelecimento = () => {
 
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
-        <View style={styles.item}>
+        <View style={styles.containerPerfil}>
+            <TouchableOpacity style={styles.item} onPress={irParaListarAlimento}>
+            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
             <Text style={styles.titulo}>Endereço: {item.endereco}</Text>
-            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
+            </TouchableOpacity>
         </View>
     )
 
@@ -69,4 +77,4 @@ const ListarEstabelecimento = () => {
 
 
 }
-export default ListarEstabelecimento;
+export default ListarEstabelecimentos;

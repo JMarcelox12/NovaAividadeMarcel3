@@ -12,6 +12,7 @@ import HomeEstabelecimento from './screens/HomeEstabelecimento';
 import ListarAlimentos from "./screens/ListarAlimentos";
 import ManterAlimento from './screens/ManterAlimento';
 import RegistroAlimento from "./screens/RegistroAlimento";
+import ListarEstabelecimentos from "./screens/ListarEstabelecimentos";
 
 
 
@@ -28,6 +29,7 @@ export default function App() {
         <Stack.Screen name="ListarAlimentos" component={ListarAlimentos}/>
         <Stack.Screen name="ManterAlimento" component={ManterAlimento}/>
         <Stack.Screen name="RegistroAlimento" component={RegistroAlimento}/>
+        <Stack.Screen name="ListarEstabelecimentos" component={ListarEstabelecimentos}/>
       </Stack.Navigator>    
     </NavigationContainer>
   );

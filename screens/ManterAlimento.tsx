@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from 'react';
 import { auth, firestore, storage } from '../firebase';
-import { KeyboardAvoidingView, StyleSheet, View, Alert, Text, TextInput, TouchableOpacity, Pressable, Image, FlatList, ActivityIndicator } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, View, Alert, Text, TextInput, TouchableOpacity, Pressable, Image, FlatList, ActivityIndicator, Button, ScrollView } from "react-native";
 import styles from "../styles";
 import * as ImagePicker from "expo-image-picker";
 import { uploadBytes } from "firebase/storage";
 import { Alimento } from "../model/Alimento";
+import Modal from "react-native-modal";
 
 const ManterAlimento = () => {
     const [formAlimento, setFormAlimento]=
@@ -13,12 +14,16 @@ const ManterAlimento = () => {
     const [loading, setLoading] = useState(true);
     const [atualizar, setAtualizar] = useState(true);
     const [alimento, setAlimento] = useState<Alimento[]>([]); // Array em branco
-
+    const [ModalEditar, setModalEditar] = useState(false);
     const [imagePath, setImagePath] = useState('https://cdn-icons-png.flaticon.com/512/3318/3318274.png');
 
     const refALimento = firestore.collection("Estabelecimento")
         .doc(auth.currentUser?.uid)
         .collection("Alimento")
+
+    const modalEditar = () => {
+        setModalEditar(!ModalEditar);
+    }
 
     const Salvar = async() => {
         const alimento = new Alimento(formAlimento);
@@ -144,21 +149,6 @@ const ManterAlimento = () => {
                 />
     }
 
-
-    const renderItem = ({ item }) => <Item item={item} />
-    const Item = ({ item }) => (
-        <TouchableOpacity 
-            style={styles.item}
-            onPress={ () => editar(item) }
-            onLongPress={ () => excluir(item) }
-        >
-            <Text style={styles.titulo}>Nome: {item.nome}</Text>
-            <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
-            <Text style={styles.titulo}>Preço: {item.preco}</Text>
-            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
-        </TouchableOpacity>
-    )
-
     // EXCLUI E EDITAR
     const excluir = async(item) => {
         Alert.alert(
@@ -186,7 +176,7 @@ const ManterAlimento = () => {
     }
 
     const editar = async(item) => {
-        const resutado = firestore.collection('Usuario')
+        const resutado = firestore.collection('Estabelecimento')
             .doc(auth.currentUser?.uid)
             .collection('Alimento')
             .doc(item.id)
@@ -199,9 +189,30 @@ const ManterAlimento = () => {
 
     }
 
+    const renderItem = ({ item }) => <Item item={item} />
+    const Item = ({ item }) => (
+        <View style={{flexDirection: "column", alignItems: "center", justifyContent: 'center'}}>
+            <TouchableOpacity style={styles.item}>
+            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
+            <Text style={styles.titulo}>Nome: {item.nome}</Text>
+            <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
+            <Text style={styles.titulo}>Preço: {item.preco}</Text>            
+            </TouchableOpacity>
+            <View style={styles.areaLateral}>
+                <TouchableOpacity style={[styles.buttonEdit, styles.buttonOutline]} onPress={modalEditar}>
+                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>EDITAR </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.buttonEdit]} onPress={excluir}>
+                    <Text style={[styles.buttonText]}>EXCLUIR </Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    )
+
+
 
     return (
-        
+        <View style={styles.container}>
             <FlatList 
                 data={alimento}
                 renderItem={renderItem}
@@ -209,6 +220,67 @@ const ManterAlimento = () => {
                 refreshing={atualizar}
                 onRefresh={ () => listarTodos() }
             />
+            <Modal
+                isVisible={ModalEditar}
+            >
+        <KeyboardAvoidingView style={styles.containerModal}>
+            <ScrollView style={styles.scroll}>
+            <View style={[styles.buttonContainer, {marginVertical: 30}]}>
+
+                <Pressable onPress={ () => selecionaFoto() }>
+                    <View style={styles.imagemView}>
+                        <Image source={{ uri: imagePath }} style={styles.imagem}/>
+                    </View>
+                </Pressable> 
+
+                <TextInput 
+                    placeholder="Nome" 
+                    value={formAlimento.nome}
+                    onChangeText={texto => setFormAlimento({
+                        ...formAlimento,
+                        nome: texto
+                    }) }
+                    style={styles.boxAuth} 
+                />
+                <TextInput 
+                    placeholder="Descricao" 
+                    value={formAlimento.descricao}
+                    onChangeText={texto => setFormAlimento({
+                        ...formAlimento,
+                        descricao: texto
+                    }) }
+                    style={styles.boxAuth} 
+                />
+                <TextInput 
+                    placeholder="Preço" 
+                    value={formAlimento.preco}
+                    onChangeText={texto => setFormAlimento({
+                        ...formAlimento,
+                        preco: texto
+                    }) }
+                    style={styles.boxAuth} 
+                />
+                
+
+            </View> 
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity 
+                    style={[styles.button]}
+                    onPress={Salvar}
+                >
+                    <Text style={[styles.buttonText]}>Salvar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={[styles.button, styles.buttonOutline]}
+                    onPress={modalEditar}
+                >
+                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>Fechar </Text>
+                </TouchableOpacity>
+            </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
+                </Modal>
+        </View>
     );
 }
 

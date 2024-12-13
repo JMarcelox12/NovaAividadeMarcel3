@@ -9,14 +9,22 @@ const HomeEstabelecimento = () => {
 
     const navigation = useNavigation();
 
-    const Drawer = createDrawerNavigator();
+    //const Drawer = createDrawerNavigator();
 
-    const listarAlimento = () => {
-        navigation.navigate("ListarAlimento");
+    const irParaListarAlimento = () => {
+        navigation.navigate("ListarAlimentos");
     }
 
-    const manterAlimento = () => {
+    const irParaManterAlimento = () => {
         navigation.navigate("ManterAlimento");
+    }
+
+    const listarEstabelecimentos = () => {
+        navigation.navigate("ListarEstabelecimentos")
+    }
+
+    const irParaRegistroAlimento = () => {
+        navigation.navigate("RegistroAlimento")
     }
 
     const handleSignOut = () => {
@@ -29,39 +37,37 @@ const HomeEstabelecimento = () => {
     
     return(
     <View style={styles.container}>
-        <Drawer.Navigator initialRouteName="Página Inicial">
-            <Drawer.Screen name="Página Inicial" component={HomeEstabelecimento}/>
-        </Drawer.Navigator>
         <ScrollView style={styles.scroll}>
             <Image source={require('../assets/JaPedeLogo.png')} style={{height: 150, width: "100%"}}/>
 
             <View style={[styles.buttonContainer, {width: "100%"}]}>
 
-                <TouchableOpacity style={styles.boxPerfil} onPress={listarAlimento}>
+                <TouchableOpacity style={styles.boxPerfil}>
+                    <View style={[styles.containerPerfil]}>
+                        <Text style={styles.text}>Listar pedidos </Text>
+                        <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaListarAlimento}>
                 <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Mostrar Cardápio </Text>
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
                 </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.boxPerfil} onPress={manterAlimento}>
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaRegistroAlimento}>
+                <View style={[styles.containerPerfil]}>
+                        <Text style={styles.text}>Adicionar Cardápio </Text>
+                        <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
+                </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaManterAlimento}>
                     <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Editar Cardápio </Text>
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.boxPerfil}>
-                    <View style={[styles.containerPerfil]}>
-                        <Text style={styles.text}>Dados bancários </Text>
-                        <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.boxPerfil} onPress={listarMotoristas}>
-                    <View style={[styles.containerPerfil]}>
-                        <Text style={styles.text}>Lista de Motoristas </Text>
-                        <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
-                    </View>
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.boxPerfil} onPress={listarEstabelecimentos}>
                     <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Favoritos </Text>

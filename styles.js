@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "120%",
   },
-  //Autenticação
   //Listagem
   //Inicio
   boxOne: {
@@ -129,27 +128,61 @@ const styles = StyleSheet.create({
   //FLATLIST
   item: {
     backgroundColor: 'white',
-    borderColor: '#0782F9',
+    borderColor: '#d70f0f',
     borderWidth: 2,
     borderRadius: 15, 
-    padding: 20,
-    marginVertical: 10       
+    padding: 15,
+    marginVertical: 10,
+    width: "95%",
+    height: 350,
+    justifyContent: "center",
+    alignItems: "center",
 },
 titulo: {
     fontSize: 18,
-    color: '#0782F9',
-    fontWeight: '500'
+    color: '#d70f0f',
+    fontWeight: '500',
+    justifyContent: "space-between",
+    alignItems: "center",
 },
 imagem: {
-    width: 150,
-    height: 150,
-    borderRadius: 150/2
+    width: 200,
+    height: 200,
+    borderRadius: 200/2,
 },
 imagemView: {
     alignContent: 'center',
     alignItems: 'center',
     marginBottom: 40
-}
+},
+buttonEdit: {
+  backgroundColor: "#d70f0f",
+    width: "40%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    margin: 10,
+},
+
+//modal
+containerModal: {
+  height: 300,
+  width: "100%",
+  flex: 1,
+  backgroundColor: '#fff',
+  justifyContent :'center',
+  alignItems: "center",
+},
+modalContent: {
+  width: "100%",
+  height: "50%",
+  backgroundColor: "white",
+  borderRadius: 10,
+  padding: 20,
+  alignItems: "center",
+  justifyContent: "center",
+  marginVertical: 30
+},
 });
 
 export default styles;

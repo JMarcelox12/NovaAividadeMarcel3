@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from 'react';
 import { auth, firestore, storage } from '../firebase';
-import { KeyboardAvoidingView, StyleSheet, View, Alert, Text, TextInput, TouchableOpacity, Pressable, Image, FlatList, ActivityIndicator } from "react-native";
+import { KeyboardAvoidingView, StyleSheet, View, Alert, Text, TextInput, TouchableOpacity, Pressable, Image, FlatList, ActivityIndicator, ScrollView } from "react-native";
 import styles from "../styles";
 import { Alimento } from "../model/Alimento";
 import * as ImagePicker from "expo-image-picker";
@@ -12,6 +12,7 @@ const RegistroAlimento = () => {
     useState<Partial<Alimento>>({})
     const [loading, setLoading] = useState(true);
     const [alimento, setAlimento] = useState<Alimento[]>([]); // Array em branco
+    const [imagePath, setImagePath] = useState('https://cdn-icons-png.flaticon.com/512/3318/3318274.png');
 
         
 
@@ -92,7 +93,7 @@ const RegistroAlimento = () => {
             fbResult.metadata.fullPath
         ).getDownloadURL();
 
-        setFormAlimento({... formAlimento, urlfoto: urlDownload});        
+        setFormAlimento({... formAlimento, imagem: urlDownload});        
     }
 
     //FLATLIST
@@ -116,8 +117,18 @@ const RegistroAlimento = () => {
 
     return (
         <KeyboardAvoidingView style={styles.container}>
+            <ScrollView style={styles.scroll}>
             <View style={styles.buttonContainer}>
                 
+            <Image source={require('../assets/JaPedeLogo.png')} style={{height: 130, width: "70%", margin: 20,}}/>
+
+                <TouchableOpacity style={[styles.boxAuth]}onPress={selecionaFoto}>
+                        {imagePath === '' ? (
+                            <Text style={styles.boxAuthText}>Selecionar imagem</Text>
+                        ) : (
+                            <Text style={[styles.boxAuthText, {alignItems: "center"}]}>imagem(1).png</Text>
+                        )}
+                </TouchableOpacity>  
 
                 <TextInput 
                     placeholder="Nome" 
@@ -146,35 +157,32 @@ const RegistroAlimento = () => {
                     }) }
                     style={styles.boxAuth} 
                 />
-                <Pressable onPress={ () => selecionaFoto() }>
-                    <View style={styles.imagemView}>
-                        <Image source={{ uri: imagePath }} style={styles.imagem}/>
-                    </View>
-                </Pressable>
+                
 
             </View> 
             <View style={styles.buttonContainer}>
-                <TouchableOpacity 
-                    style={[styles.button, styles.buttonOutline]}
-                    onPress={Limpar}
-                >
-                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>Limpar</Text>
-                </TouchableOpacity>
+                
                 <TouchableOpacity 
                     style={[styles.button]}
                     onPress={Salvar}
                 >
                     <Text style={[styles.buttonText]}>Salvar</Text>
                 </TouchableOpacity>
+                <TouchableOpacity 
+                    style={[styles.button, styles.buttonOutline]}
+                    onPress={Limpar}
+                >
+                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>Limpar</Text>
+                </TouchableOpacity>
+                
             </View>
-
-            <FlatList 
-                data={alimento}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-            />
+            </ScrollView>
         </KeyboardAvoidingView>
     );
 }
 
 export default RegistroAlimento;
+
+function setImagePath(uri: any) {
+    throw new Error("Function not implemented.");
+}

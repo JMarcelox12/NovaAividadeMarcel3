@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase';
-import { FlatList, View, TextInput, TouchableOpacity, Text, ActivityIndicator, Image } from "react-native";
+import { FlatList, View, TextInput, TouchableOpacity, Text, ActivityIndicator, Image, ScrollView } from "react-native";
 import styles from '../styles';
 import { Alimento } from '../model/Alimento';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -51,10 +51,10 @@ const ListarAlimento = () => {
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
         <View style={styles.item}>
+            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
             <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
-            <Text style={styles.titulo}>Preço: {item.preco}</Text>
-            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
+            <Text style={styles.titulo}>Preço: R${item.preco}</Text> 
         </View>
     )
 

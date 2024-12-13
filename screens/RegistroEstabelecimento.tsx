@@ -3,7 +3,7 @@ import { Usuario } from "../model/Usuario";
 import { Estabelecimento } from "../model/Estabelecimento";
 import { auth, firestore, storage } from "../firebase";
 import { useEffect, useState } from "react";
-import { KeyboardAvoidingView, TextInput, TouchableOpacity, View, Text, Alert} from "react-native";
+import { KeyboardAvoidingView, TextInput, TouchableOpacity, View, Text, Alert, Image} from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -128,6 +128,8 @@ const RegistroEstabelecimento = () => {
     return(
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.buttonContainer}>
+
+            <Image source={require('../assets/JaPedeLogo.png')} style={{height: 130, width: "70%", margin: 20,}}/>
 
                 <TextInput 
                     placeholder="Nome" 
