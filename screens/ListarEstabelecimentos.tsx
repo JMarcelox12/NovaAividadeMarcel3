@@ -1,80 +1,66 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from 'react';
 import { auth, firestore } from '../firebase';
-import { FlatList, View, TextInput, TouchableOpacity, Text, ActivityIndicator, Image } from "react-native";
+import { FlatList, View, Text, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import styles from '../styles';
-import { Estabelecimento } from '../model/Estabelecimento';
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const ListarEstabelecimentos = () => {
     const [loading, setLoading] = useState(true);
-    const [atualizar, setAtualizar] = useState(true);
-    const [estabelecimento, setEstabelecimento] = useState<Estabelecimento[]>([]); // Array em branco
+    const [estabelecimentos, setEstabelecimentos] = useState([]);
 
     const navigation = useNavigation();
 
-    const irParaListarAlimento = () => {
-        navigation.navigate("ListarAlimentos")
-    }
+    const refEstabelecimento = firestore.collection("Estabelecimento");
 
-    const refEstabelecimento = firestore.collection("Estabelecimento")
-    //FLATLIST
     useEffect(() => {
-        if (loading){
-            listarTodos();
-        }
-    }, [estabelecimento]);
-
-    const listarTodos = () => {
-        const subscriber = refEstabelecimento
-        .onSnapshot((querySnapshot) => {
-            const estabelecimento = [];
-            querySnapshot.forEach((documentSnapshot) => {
-                estabelecimento.push({
-                    ...documentSnapshot.data(),
-                    key: documentSnapshot.id
+        const unsubscribe = refEstabelecimento.onSnapshot((querySnapshot) => {
+            const estList = [];
+            querySnapshot.forEach((doc) => {
+                estList.push({
+                    id: doc.id,
+                    ...doc.data(),
                 });
             });
-            setEstabelecimento(estabelecimento);
+            setEstabelecimentos(estList);
             setLoading(false);
-            setAtualizar(false);
         });
-        return () => subscriber();
+
+        return () => unsubscribe();
+    }, []);
+
+    const irParaListarAlimento = (estabelecimentoId) => {
+        navigation.navigate('ListarAlimentos', { estabelecimentoId });
+    };
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0782F9" style={styles.center} />;
     }
 
-    if (loading){
-        return <ActivityIndicator 
-                    size="60" 
-                    color="#0782F9"
-                    style={styles.item}
-                />
-    }
-
-
-    const renderItem = ({ item }) => <Item item={item} />
-    const Item = ({ item }) => (
+    const renderItem = ({ item }) => (
         <View style={styles.containerItem}>
-            <TouchableOpacity style={styles.item}
-                    onPress={irParaListarAlimento}
+            <TouchableOpacity 
+                style={styles.item} 
+                onPress={() => irParaListarAlimento(item.id)}
             >
-            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
-            <Text style={styles.titulo}>Nome: {item.nome}</Text>
-            <Text style={styles.titulo}>Endereço: {item.endereco}</Text>
+                <Image source={{ uri: item.imagem }} style={styles.imagem} />
+                <Text style={styles.titulo}>Nome: {item.nome}</Text>
+                <Text style={styles.titulo}>Endereço: {item.endereco}</Text>
             </TouchableOpacity>
         </View>
-    )
+    );
 
     return (
-            <FlatList 
-                data={estabelecimento}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                refreshing={atualizar}
-                onRefresh={ () => listarTodos() }
-            />
-    )
+        <FlatList 
+            data={estabelecimentos}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            refreshing={loading}
+            onRefresh={() => {
+                setLoading(true);
+                setEstabelecimentos([]);
+            }}
+        />
+    );
+};
 
-
-
-}
 export default ListarEstabelecimentos;
