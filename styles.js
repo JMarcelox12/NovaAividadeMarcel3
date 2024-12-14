@@ -23,6 +23,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "120%",
   },
+  center:{
+    justifyContent:"center",
+    alignItems:"center",
+    width: "100%",
+  },
   //Listagem
   //Inicio
   boxOne: {
@@ -131,9 +136,8 @@ const styles = StyleSheet.create({
     borderColor: '#d70f0f',
     borderWidth: 2,
     borderRadius: 15, 
-    padding: 15,
     marginVertical: 10,
-    width: "95%",
+    width: "90%",
     height: 350,
     justifyContent: "center",
     alignItems: "center",
@@ -162,6 +166,11 @@ buttonEdit: {
     borderRadius: 10,
     alignItems: "center",
     margin: 10,
+},
+containerItem: {
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: 'center',
 },
 
 //modal

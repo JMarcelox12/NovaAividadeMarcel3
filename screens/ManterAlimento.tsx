@@ -7,6 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import { uploadBytes } from "firebase/storage";
 import { Alimento } from "../model/Alimento";
 import Modal from "react-native-modal";
+import Picker from "react-native-picker-select";
 
 const ManterAlimento = () => {
     const [formAlimento, setFormAlimento]=
@@ -20,11 +21,6 @@ const ManterAlimento = () => {
     const refALimento = firestore.collection("Estabelecimento")
         .doc(auth.currentUser?.uid)
         .collection("Alimento")
-
-    const modalEditar = (item) => {
-        setFormAlimento(item);
-        setModalEditar(!ModalEditar);
-    }
 
     const Salvar = async(item) => {
         const alimento = new Alimento(formAlimento);
@@ -146,7 +142,7 @@ const ManterAlimento = () => {
         return <ActivityIndicator 
                     size="60" 
                     color="#0782F9"
-                    style={styles.item}
+                    styles={styles.item}
                 />
     }
 
@@ -177,7 +173,7 @@ const ManterAlimento = () => {
         )
     }
 
-    const editar = async (item) => {
+    const editar = async (item: Alimento) => {
         firestore
             .collection("Estabelecimento")
             .doc(auth.currentUser?.uid)
@@ -186,7 +182,6 @@ const ManterAlimento = () => {
             .onSnapshot((documentSnapshot) => {
                 const alimento = new Alimento(documentSnapshot.data());
                 setFormAlimento(alimento);
-                alert("Alimento Atualizado!");
                 setAtualizar(true);
             });
     };
@@ -195,96 +190,82 @@ const ManterAlimento = () => {
 
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
-        <View style={{flexDirection: "column", alignItems: "center", justifyContent: 'center'}}>
-            <TouchableOpacity style={styles.item}>
+        <View style={styles.containerItem}>
+            <TouchableOpacity style={styles.item}
+                    onPress={() => {
+                        editar(item);
+                    }}
+                    onLongPress={() => excluir(item)}
+            >
             <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
-            <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
+            <Text style={styles.titulo}>Descrição: {item.texto}</Text>
             <Text style={styles.titulo}>Preço: {item.preco}</Text>            
             </TouchableOpacity>
-            <View style={styles.areaLateral}>
-                <TouchableOpacity style={[styles.buttonEdit, styles.buttonOutline]} onPress={modalEditar}>
-                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>EDITAR </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.buttonEdit]} onPress={() => excluir(item)}>
-                    <Text style={[styles.buttonText]}>EXCLUIR </Text>
-                </TouchableOpacity>
-            </View>
         </View>
     )
 
-    const item = new Alimento(formAlimento);
-
     return (
-        
         <View style={styles.container}>
-            <FlatList 
-                data={alimento}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                refreshing={atualizar}
-                onRefresh={ () => listarTodos() }
-            />
-            <Modal
-                isVisible={ModalEditar}
-            >
-        <KeyboardAvoidingView style={styles.containerModal}>
-            <ScrollView style={styles.scroll}>
-            <View style={[styles.buttonContainer, {marginVertical: 30}]}>
-
-                <Pressable onPress={ () => selecionaFoto() }>
-                    <View style={styles.imagemView}>
-                        <Image source={{ uri: imagePath }} style={styles.imagem}/>
-                    </View>
-                </Pressable> 
-
-                <TextInput 
-                    placeholder="Nome" 
-                    value={formAlimento.nome}
-                    onChangeText={texto => setFormAlimento({
-                        ...formAlimento,
-                        nome: texto
-                    }) }
-                    style={styles.boxAuth} 
-                />
-                <TextInput 
-                    placeholder="Descricao" 
-                    value={formAlimento.descricao}
-                    onChangeText={texto => setFormAlimento({
-                        ...formAlimento,
-                        descricao: texto
-                    }) }
-                    style={styles.boxAuth} 
-                />
-                <TextInput 
-                    placeholder="Preço" 
-                    value={formAlimento.preco}
-                    onChangeText={texto => setFormAlimento({
-                        ...formAlimento,
-                        preco: texto
-                    }) }
-                    style={styles.boxAuth} 
-                />
+        <ScrollView style={styles.scroll}>
+            <View style={[ {flexDirection: "column", alignItems: "center", justifyContent: 'center', marginTop: 50 }]}>
                 
-
-            </View> 
+                <View style={styles.buttonContainer}>
+                    <TextInput
+                        placeholder="Nome *"
+                        value={formAlimento.nome}
+                        onChangeText={(texto) =>
+                            setFormAlimento({
+                                ...formAlimento,
+                                nome: texto,
+                            })
+                        }
+                        style={styles.boxAuth}
+                    />
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TextInput
+                        placeholder="Descrição *"
+                        value={formAlimento.descricao}
+                        onChangeText={(texto) =>
+                            setFormAlimento({
+                                ...formAlimento,
+                                descricao: texto,
+                            })
+                        }
+                        style={styles.boxAuth}
+                    />
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TextInput
+                        placeholder="Preço *"
+                        value={formAlimento.preco}
+                        onChangeText={(texto) =>
+                            setFormAlimento({
+                                ...formAlimento,
+                                preco: (texto),
+                            })
+                        }
+                        style={styles.boxAuth}
+                    />
+                </View>
+            </View>
             <View style={styles.buttonContainer}>
-                <TouchableOpacity 
-                    style={[styles.button]}
-                    onPress={() => editar(item)}
-                >
-                    <Text style={[styles.buttonText]}>Salvar</Text>
+                <TouchableOpacity style={[styles.button, styles.buttonOutline]} onPress={Limpar}>
+                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>Limpar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
-                    style={[styles.button, styles.buttonOutline]}
-                    onPress={modalEditar}
-                >
-                    <Text style={[styles.buttonText, styles.buttonOutlineText]}>Fechar </Text>
+                <TouchableOpacity style={styles.button} onPress={Salvar}>
+                    <Text style={styles.buttonText}>Salvar</Text>
                 </TouchableOpacity>
             </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
-                </Modal>
+            <FlatList 
+                            data={alimento}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id}
+                            refreshing={atualizar}
+                            onRefresh={ () => listarTodos() }
+                        />
+        </ScrollView>
         </View>
     );
 }

@@ -50,16 +50,17 @@ const ListarAlimento = () => {
 
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
-        <View style={styles.item}>
+        <View style={styles.center}>
+        <View style={[styles.item]}>
             <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
             <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
             <Text style={styles.titulo}>Preço: R${item.preco}</Text> 
         </View>
+        </View>
     )
 
     return (
-        <View style={styles.container}>
             <FlatList 
                 data={alimento}
                 renderItem={renderItem}
@@ -67,7 +68,6 @@ const ListarAlimento = () => {
                 refreshing={atualizar}
                 onRefresh={ () => listarTodos() }
             />
-        </View>
     )
 
 

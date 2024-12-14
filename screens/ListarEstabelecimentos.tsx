@@ -53,8 +53,10 @@ const ListarEstabelecimentos = () => {
 
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
-        <View style={styles.containerPerfil}>
-            <TouchableOpacity style={styles.item} onPress={irParaListarAlimento}>
+        <View style={styles.containerItem}>
+            <TouchableOpacity style={styles.item}
+                    onPress={irParaListarAlimento}
+            >
             <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
             <Text style={styles.titulo}>Endereço: {item.endereco}</Text>
@@ -63,7 +65,6 @@ const ListarEstabelecimentos = () => {
     )
 
     return (
-        <View style={styles.container}>
             <FlatList 
                 data={estabelecimento}
                 renderItem={renderItem}
@@ -71,7 +72,6 @@ const ListarEstabelecimentos = () => {
                 refreshing={atualizar}
                 onRefresh={ () => listarTodos() }
             />
-        </View>
     )
 
 
