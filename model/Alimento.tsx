@@ -2,8 +2,9 @@ export class Alimento{
     public id: string;
     public nome: string;
     public descricao: string;
-    public preco: string;
+    public preco: number;
     public imagem: string;
+    quantidade: any;
 
     constructor(obj?: Partial<Alimento>) {
         if (obj){
@@ -32,7 +33,7 @@ export class Alimento{
             nome: this.nome,
             descricao: this.descricao,
             preco: this.preco,
-            imagem: this.imagem,
+            imagem: this.imagem
         }
         return alimento
     }

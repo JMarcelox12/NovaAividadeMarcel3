@@ -18,7 +18,7 @@ const ManterAlimento = () => {
     const [ModalEditar, setModalEditar] = useState(false);
     const [imagePath, setImagePath] = useState('https://cdn-icons-png.flaticon.com/512/3318/3318274.png');
 
-    const refALimento = firestore.collection("Estabelecimento")
+    const refAlimento = firestore.collection("Estabelecimento")
         .doc(auth.currentUser?.uid)
         .collection("Alimento")
 
@@ -26,7 +26,7 @@ const ManterAlimento = () => {
         const alimento = new Alimento(formAlimento);
 
         if(alimento.id === undefined) {
-            const refIdAlimento = refALimento.doc();
+            const refIdAlimento = refAlimento.doc();
             alimento.id = refIdAlimento.id;        
             
             refIdAlimento.set(alimento.toFirestore())
@@ -36,7 +36,7 @@ const ManterAlimento = () => {
             })
             .catch( error => alert(error.message))
         } else {
-            const refIdAlimento = refALimento.doc(alimento.id);
+            const refIdAlimento = refAlimento.doc(alimento.id);
 
             refIdAlimento.update(alimento.toFirestore())
             .then(() =>{
@@ -120,7 +120,7 @@ const ManterAlimento = () => {
     }, [alimento]);
 
     const listarTodos = () => {
-        const subscriber = refALimento
+        const subscriber = refAlimento
         .onSnapshot((querySnapshot) => {
             const alimento = [];
             querySnapshot.forEach((documentSnapshot) => {
@@ -159,7 +159,7 @@ const ManterAlimento = () => {
                 {
                     text: "Excluir",
                     onPress: async () => {
-                        await refALimento
+                        await refAlimento
                             .doc(item.id)
                             .delete()
                             .then( () => {
@@ -239,11 +239,11 @@ const ManterAlimento = () => {
                 <View style={styles.buttonContainer}>
                     <TextInput
                         placeholder="Preço *"
-                        value={formAlimento.preco}
+                        value={(formAlimento.preco || 0).toString()}
                         onChangeText={(texto) =>
                             setFormAlimento({
                                 ...formAlimento,
-                                preco: (texto),
+                                preco: parseFloat(texto),
                             })
                         }
                         style={styles.boxAuth}

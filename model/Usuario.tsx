@@ -44,7 +44,7 @@ export class Usuario{
             datanasc: this.datanasc,
             imagem: this.imagem,
             endereco: this.endereco,
-            tipo: this.tipo,
+            tipo: this.tipo
         }
         return usuario
     }

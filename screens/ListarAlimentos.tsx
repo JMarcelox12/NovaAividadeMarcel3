@@ -1,67 +1,67 @@
-import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from 'react';
-import { auth, firestore } from '../firebase';
-import { FlatList, View, Text, ActivityIndicator, Image } from "react-native";
-import styles from '../styles';
+import { View, Text, ActivityIndicator, Image, ScrollView, FlatList, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { auth, firestore } from "../firebase";
+import { Alimento } from "../model/Alimento";
+import styles from "../styles";
 
-const ListarAlimento = () => {
-    const [alimentos, setAlimentos] = useState([]);
+const Listar = () => {
     const [loading, setLoading] = useState(true);
-    const route = useRoute();
-    const { estabelecimentoId } = route.params; // ID do estabelecimento passado pela navegação
+    const [alimento, setAlimento] = useState<Alimento[]>([]);
+    const [atualizar, setAtualizar] = useState(true);
 
-    // Referência para os alimentos do estabelecimento específico
-    const refAlimento = firestore
-        .collection("Estabelecimento")
-        .doc(estabelecimentoId)  // Usando o ID do estabelecimento
-        .collection("Alimento");
+    const refAlimento = firestore.collection("Estabelecimento").doc(auth.currentUser?.uid).collection("Alimento");
 
-    // Carregar os alimentos ao montar o componente
     useEffect(() => {
-        const unsubscribe = refAlimento.onSnapshot((querySnapshot) => {
-            const alimentosList = [];
-            querySnapshot.forEach((doc) => {
-                alimentosList.push({
-                    id: doc.id,
-                    ...doc.data(),
+        refAlimento.onSnapshot((querySnapshot) => {
+            const alimento: any[] = [];
+            querySnapshot.forEach((documentSnapshot) => {
+                alimento.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id,
                 });
             });
-            setAlimentos(alimentosList);  // Atualiza o estado com os alimentos encontrados
-            setLoading(false);  // Desliga o estado de loading
+            setAlimento(alimento);
+            setLoading(false);
         });
+    });
 
-        // Limpeza (unsubscribe) quando o componente for desmontado
-        return () => unsubscribe();
-    }, [estabelecimentoId]); // Recarrega se o ID do estabelecimento mudar
-
-    if (loading) {
-        return <ActivityIndicator size="large" color="#0782F9" style={styles.center} />;
+    const listarTodos = () => {
+        const subscriber = refAlimento
+        .onSnapshot((querySnapshot) => {
+            const alimento = [];
+            querySnapshot.forEach((documentSnapshot) => {
+                alimento.push({
+                    ...documentSnapshot.data(),
+                    key: documentSnapshot.id
+                });
+            });
+            setAlimento(alimento);
+            setLoading(false);
+            setAtualizar(false);
+        });
+        return () => subscriber();
     }
 
-    // Componente para renderizar cada item (alimento)
-    const renderItem = ({ item }) => (
-        <View style={styles.center}>
+    const renderItem = ({ item }) => <Item item={item} />
+    const Item = ({ item }) => (
+        <View style={styles.containerItem}>
             <View style={styles.item}>
-                <Image source={{ uri: item.imagem }} style={styles.imagem} />
-                <Text style={styles.titulo}>Nome: {item.nome}</Text>
-                <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
-                <Text style={styles.titulo}>Preço: R${item.preco}</Text>
+            <Image source={{ uri: item.imagem }} style={styles.imagem}/>
+            <Text style={styles.titulo}>Nome: {item.nome}</Text>
+            <Text style={styles.titulo}>Descrição: {item.descricao}</Text>
+            <Text style={styles.titulo}>Preço: {item.preco}</Text>           
             </View>
         </View>
-    );
+    )
 
     return (
         <FlatList 
-            data={alimentos}
+            data={alimento}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id} // Chave única para cada alimento
-            onRefresh={() => {
-                setLoading(true); // Resetando o loading antes de refazer a consulta
-                setAlimentos([]);  // Limpando a lista de alimentos enquanto carrega novos dados
-            }}
-            refreshing={loading}  // Indicador de carregamento enquanto a atualização acontece
+            keyExtractor={(item) => item.id}
+            refreshing={atualizar}
+            onRefresh={ () => listarTodos() }
         />
     );
 };
-
-export default ListarAlimento;
+export default Listar;

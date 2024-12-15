@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   scroll: {
     width: "100%",
-    height: "120%",
+    height: "100%",
   },
   center:{
     justifyContent:"center",
@@ -191,6 +191,18 @@ modalContent: {
   alignItems: "center",
   justifyContent: "center",
   marginVertical: 30
+},
+//carrinho
+carrinhoItemContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  padding: 10,
+  backgroundColor: '#f0f0f0',
+  marginVertical: 4,
+  borderRadius: 5,
+},
+carrinhoContainer: {
+  paddingBottom: 16,
 },
 });
 

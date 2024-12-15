@@ -4,7 +4,7 @@ import { auth, firestore } from '../firebase';
 import { FlatList, View, Text, ActivityIndicator, Image, TouchableOpacity } from "react-native";
 import styles from '../styles';
 
-const ListarEstabelecimentos = () => {
+const ListarEstabelecimentosUsuario = () => {
     const [loading, setLoading] = useState(true);
     const [estabelecimentos, setEstabelecimentos] = useState([]);
 
@@ -39,11 +39,11 @@ const ListarEstabelecimentos = () => {
     const renderItem = ({ item }) => <Item item={item} />
     const Item = ({ item }) => (
         <View style={styles.containerItem}>
-            <View style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => irParaVenderAlimento(item.id)}>
             <Image source={{ uri: item.imagem }} style={styles.imagem}/>
             <Text style={styles.titulo}>Nome: {item.nome}</Text>
             <Text style={styles.titulo}>Endereço: {item.endereco}</Text>        
-            </View>
+            </TouchableOpacity>
         </View>
     )
 
@@ -61,4 +61,4 @@ const ListarEstabelecimentos = () => {
     );
 };
 
-export default ListarEstabelecimentos;
+export default ListarEstabelecimentosUsuario;

@@ -27,6 +27,10 @@ const HomeEstabelecimento = () => {
         navigation.navigate("RegistroAlimento")
     }
 
+    const irParaListaPedidos = () => {
+        navigation.navigate("PedidosEstabelecimento");
+    }
+
     const handleSignOut = () => {
         auth
             .signOut()
@@ -42,7 +46,7 @@ const HomeEstabelecimento = () => {
 
             <View style={[styles.buttonContainer, {width: "100%"}]}>
 
-                <TouchableOpacity style={styles.boxPerfil}>
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaListaPedidos}>
                     <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Listar pedidos </Text>
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>

@@ -3,7 +3,7 @@ import { Usuario } from "../model/Usuario";
 import { Estabelecimento } from "../model/Estabelecimento";
 import { auth, firestore, storage } from "../firebase";
 import { useEffect, useState } from "react";
-import { KeyboardAvoidingView, TextInput, TouchableOpacity, View, Text, Alert, Image} from "react-native";
+import { KeyboardAvoidingView, TextInput, TouchableOpacity, View, Text, Alert, Image, ScrollView} from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -56,6 +56,19 @@ const RegistroUsuario = () => {
             })
         })
 
+    const criarCarrinho = async () => {
+        const carrinhoRef = firestore.collection("Carrinho").doc(auth.currentUser?.uid);
+        
+        const carrinhoInicial = {
+            id: auth.currentUser?.uid,
+            itens: [],
+            total: 0,
+        };
+        
+        await carrinhoRef.set(carrinhoInicial, { merge: true });
+        console.log("Carrinho inicializado.");
+};
+
 
     const handleSignUp = () => {
         auth
@@ -75,6 +88,8 @@ const RegistroUsuario = () => {
                     endereco: formUsuario.endereco,
                     tipo: "usuario",
                 })
+
+                criarCarrinho();
 
             })
             .catch(error => alert(error.message))
@@ -140,6 +155,7 @@ const RegistroUsuario = () => {
 
     return(
         <KeyboardAvoidingView style={styles.container}>
+            <ScrollView style={styles.scroll}>
             <View style={styles.buttonContainer}>
 
             <Image source={require('../assets/JaPedeLogo.png')} style={{height: 130, width: "70%", margin: 20,}}/>
@@ -194,6 +210,7 @@ const RegistroUsuario = () => {
                     <Text style={[styles.buttonText, styles.buttonOutlineText]}>Registrar</Text>
                 </TouchableOpacity>
             </View>
+        </ScrollView>
         </KeyboardAvoidingView>
     )
 }

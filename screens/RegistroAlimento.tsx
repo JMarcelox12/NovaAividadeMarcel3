@@ -150,10 +150,10 @@ const RegistroAlimento = () => {
                 />
                 <TextInput 
                     placeholder="Preço" 
-                    value={formAlimento.preco}
+                    value={(formAlimento.preco || 0).toString()}
                     onChangeText={texto => setFormAlimento({
                         ...formAlimento,
-                        preco: texto
+                        preco: parseFloat(texto),
                     }) }
                     style={styles.boxAuth} 
                 />

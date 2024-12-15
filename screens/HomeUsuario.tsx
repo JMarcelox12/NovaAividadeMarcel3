@@ -11,20 +11,16 @@ const HomeUsuario = () => {
 
     //const Drawer = createDrawerNavigator();
 
-    const irParaListarAlimento = () => {
-        navigation.navigate("ListarAlimentos");
-    }
-
-    const irParaManterAlimento = () => {
-        navigation.navigate("ManterAlimento");
-    }
-
     const irParaListarEstabelecimentos = () => {
-        navigation.navigate("ListarEstabelecimentos");
+        navigation.navigate("ListarEstabelecimentosUsuario");
     }
 
-    const irParaRegistroAlimento = () => {
-        navigation.navigate("RegistroAlimento")
+    const irParaListaPedidos = () => {
+        navigation.navigate("PedidosUsuario");
+    }
+
+    const irParaCarrinho = () => {
+        navigation.navigate("Carrinho");
     }
 
     const handleSignOut = () => {
@@ -42,7 +38,7 @@ const HomeUsuario = () => {
 
             <View style={[styles.buttonContainer, {width: "100%"}]}>
 
-                <TouchableOpacity style={styles.boxPerfil}>
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaListaPedidos}>
                     <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Listar pedidos </Text>
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
@@ -56,7 +52,7 @@ const HomeUsuario = () => {
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.boxPerfil} onPress={irParaListarEstabelecimentos}>
+                <TouchableOpacity style={styles.boxPerfil} onPress={irParaCarrinho}>
                     <View style={[styles.containerPerfil]}>
                         <Text style={styles.text}>Carrinho </Text>
                         <Image source={require("../assets/setinha.png")} style={styles.setaPerfil}/>

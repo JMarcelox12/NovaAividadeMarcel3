@@ -40,7 +40,7 @@ export class Estabelecimento{
             senha: this.senha,
             endereco: this.endereco,
             imagem: this.imagem,
-            tipo: this.tipo,
+            tipo: this.tipo
         }
         return estabelecimento
     }
